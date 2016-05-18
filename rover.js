@@ -87,10 +87,10 @@ Rover.prototype.step = function() {
 	console.log(inst.instruction + ": " + inst.target + "(" + this.get_value(inst) + ")");
 	console.log("Immed: " + inst.immediate + " Indir: " + inst.indirect + " Reg: " + inst.indirect);
 	this.pc += 2;
+	console.log("PC: " + this.pc + " A: " + this.regA + " Heading: " + this.heading + " Turn: " + this.turn + " Speed: " + this.speed);
 };
 
 Rover.prototype.run_instruction = function(inst) {
-	
 };
 
 Rover.prototype.decode = function(ibyte, target) {
