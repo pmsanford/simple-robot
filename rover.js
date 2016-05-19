@@ -82,10 +82,10 @@ Rover.prototype.get_address = function(inst) {
 		return this.pc + tarval;
 	}
 	if (inst.immediate && inst.indirect) {
-		return tarval;
+		return inst.target;
 	}
 	if (inst.immediate) {
-		return tarval;
+		return inst.target;
 	}
 	if (inst.indirect) {
 		return this.get_mem(tarval + this.pc);
