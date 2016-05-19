@@ -5,7 +5,8 @@ var GameController = function() {
 	this.rover = new Rover(10, 10);
 	this.engine = null;
 	this.scheduler = null;
-	this.controller = null
+	this.controller = null;
+	this.rc = null;
 };
 
 GameController.prototype.init = function(targetDiv) {
@@ -27,8 +28,10 @@ GameController.prototype.init = function(targetDiv) {
 	this.scheduler = new ROT.Scheduler.Simple();
 	this.engine = new ROT.Engine(this.scheduler);
 	this.controller = new Controller(this);
+	this.rc = new RenderController(this);
 	this.scheduler.add(this.controller, true);
 	this.scheduler.add(this.rover, true);
+	this.scheduler.add(this.rc, true);
 	this.engine.start();
 	this.render();
 };
