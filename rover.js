@@ -34,10 +34,10 @@ Rover.prototype.set_mem = function(addr, value) {
 };
 
 Rover.prototype.set_hardware = function(addr, val) {
+	if (addr == 0x00)
+		this.speed = val;
 	if (addr == 0x01)
 		this.turn = val;
-	if (addr == 0x02)
-		this.speed = val;
 };
 
 Rover.prototype.get_mem = function(addr, value) {
@@ -51,11 +51,11 @@ Rover.prototype.get_mem = function(addr, value) {
 
 Rover.prototype.get_hardware = function(addr) {
 	if (addr == 0x00)
-		return this.heading;
+		return this.speed;
 	if (addr == 0x01)
 		return this.turn;
 	if (addr == 0x02)
-		return this.speed;
+		return this.heading;
 };
 
 Rover.prototype.byte_val = function(val) {
