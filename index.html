@@ -40,6 +40,7 @@
 				$('#asmbtn').on('click', function() {
 					var asm = new Assembler($('#assembly').val());
 					var cmp = asm.assemble();
+					cmp = new Uint8Array(cmp);
 					var html = '';
 					for (var i = 0; i < cmp.length; i += 2) {
 						html = html + '<br />' + cmp[i].toString(2) + ' ' + cmp[i+1].toString(2);
