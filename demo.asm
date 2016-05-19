@@ -1,0 +1,11 @@
+	LDR	!127
+	STR	[!1]
+LOP	LDR	[!0]
+	CMP	!4
+	JEQ	TRN
+TRN	JMP LOP
+	LDR	!0
+	STR	[!1]
+	LDR	!127
+	STR	[!2]
+	HLT	0
