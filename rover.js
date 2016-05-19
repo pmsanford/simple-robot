@@ -9,6 +9,8 @@ var Rover = function(x, y) {
 	this.heading = 0x00;
 	this.speed = 0x00;
 	this.turn = 0x00;
+	this.running = true;
+	this.icount = 0;
 };
 
 Rover.prototype.draw = function(display) {
@@ -67,12 +69,20 @@ Rover.prototype.byte_val = function(val) {
 };
 
 Rover.prototype.get_value = function(inst) {
+	var address = this.get_address(inst);
+	if (inst.immediate && !inst.indirect && !inst.register) {
+		return inst.target;
+	}
+	return this.get_mem(address);
+}
+
+Rover.prototype.get_address = function(inst) {
 	var tarval = this.byte_val(inst.target);
 	if (!inst.immediate && !inst.indirect && !inst.register) {
 		return this.pc + tarval;
 	}
 	if (inst.immediate && inst.indirect) {
-		return this.get_mem(tarval);
+		return tarval;
 	}
 	if (inst.immediate) {
 		return tarval;
@@ -83,16 +93,90 @@ Rover.prototype.get_value = function(inst) {
 };
 
 Rover.prototype.step = function() {
-	var inst = this.decode(this.mem[this.pc], this.mem[this.pc + 1]);
-	console.log(inst.instruction + ": " + inst.target + "(" + this.get_value(inst) + ")");
-	console.log("Immed: " + inst.immediate + " Indir: " + inst.indirect + " Reg: " + inst.indirect);
+	var ibyte = this.mem[this.pc];
+	var tbyte = this.mem[this.pc + 1];
 	this.pc += 2;
+	var inst = this.decode(ibyte, tbyte);
+	console.log(inst.instruction + ": " + inst.target + "(" + this.get_address(inst) + ")");
+	console.log("Immed: " + inst.immediate + " Indir: " + inst.indirect + " Reg: " + inst.register);
+	this.run_instruction(inst);
 	console.log("PC: " + this.pc + " A: " + this.regA + " Heading: " + this.heading + " Turn: " + this.turn + " Speed: " + this.speed);
 };
 
 Rover.prototype.run_instruction = function(inst) {
+	var addr = this.get_address(inst);
+	var val = this.get_value(inst);
+	switch (inst.instruction) {
+		case 'LDR':
+			this.regA = val;
+			break;
+		case 'STR':
+			this.set_mem(addr, this.regA);
+			break;
+		case 'CMP':
+			if (this.regA > val) {
+				this.cc = 1;
+			} else if (this.regA < val) {
+				this.cc = -1;
+			} else {
+				this.cc = 0;
+			}
+			break;
+		case 'JMP':
+			this.pc = addr;
+			break;
+		case 'JEQ':
+			if (this.cc == 0) {
+				this.pc = addr;
+			}
+			break;
+		case 'HLT':
+			this.running = false;
+			break;
+	}
 };
 
 Rover.prototype.decode = function(ibyte, target) {
 	return new Instruction(ibyte, target);
 };
+
+Rover.prototype.doTurning = function() {
+	if (this.turn != 0) {
+		var dir = this.turn / Math.abs(this.turn);
+		this.heading += dir;
+		if (this.heading === 8)
+			this.heading = 0;
+		if (this.heading === -1)
+			this.heading = 7;
+	}
+}
+
+Rover.prototype.doMove = function() {
+	if (this.speed != 0) {
+		var dir = this.speed / Math.abs(this.speed);
+		if (this.heading === 7 || this.heading === 0 || this.heading === 1)
+			this.y -= dir;
+		if (this.heading === 5 || this.heading === 4 || this.heading === 3)
+			this.y += dir;
+		if (this.heading === 5 || this.heading === 6 || this.heading === 7)
+			this.x -= dir;
+		if (this.heading === 1 || this.heading === 2 || this.heading === 3)
+			this.x += dir;
+		console.log("Updating position: " + this.x + ", " + this.y);
+	}
+}
+
+Rover.prototype.updateHardware = function() {
+	this.doTurning();
+	this.doMove();
+}
+
+Rover.prototype.act = function() {
+	if (this.running) {
+		this.step();
+	}
+	this.icount += 1;
+	if (this.icount % 10 === 0) {
+		this.updateHardware();
+	}
+}
