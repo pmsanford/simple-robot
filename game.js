@@ -1,9 +1,9 @@
 var GameController = function() {
 	this.display = new ROT.Display();
 	var opts = this.display.getOptions();
-	this.map = new GameMap(opts.width - 15, opts.height);
+	this.map = new GameMap(opts.width - 50, opts.height);
 	this.rover = new Rover(10, 10);
-	this.status = new RoverStatus(opts.width - 15, 0, this.rover);
+	this.status = new RoverStatus(opts.width - 50, 0, this.rover);
 	this.engine = null;
 	this.scheduler = null;
 	this.controller = null;

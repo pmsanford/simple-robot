@@ -2,7 +2,7 @@ var Rover = function(x, y) {
 	this.x = x;
 	this.y = y;
 	this.char = 'R';
-	this.mem = new Uint8Array(0xFF);
+	this.mem = new Uint8Array(0x100);
 	this.pc = 0x0F;
 	this.cc = 0x00;
 	this.regA = 0x00;
@@ -18,9 +18,9 @@ Rover.prototype.draw = function(display) {
 };
 
 Rover.prototype.load = function(prog) {
-	var max = prog.length > 0xEF ? 0xFF : prog.length + 0x0F;
-	for (var i = 0x0F; i < max; i++) {
-		this.mem[i] = prog[i - 0x0F];
+	var max = prog.length > 0xEF ? 0xFF : prog.length + 0x10;
+	for (var i = 0x10; i < max; i++) {
+		this.mem[i] = prog[i - 0x10];
 	}
 };
 
