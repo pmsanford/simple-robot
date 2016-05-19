@@ -1,15 +1,8 @@
-0000 0000: ADD
-0000 0001: ADR
-0000 0010: SUB
-0000 0011: SBR
-0000 0100: CMP
-0000 0101: CMR
-0000 1000: STO
-0000 1001: STR
-0000 1010: LOD
-0000 1011: LDR
-
 0000 0MIR
+
+M: Immediate
+I: Indirect
+R: Register
 
 0000 0: ADD
 0000 1: ADC
@@ -41,7 +34,6 @@
 1111 0: HLT
 1111 1: NOP
 
-
-0x00: Heading sensor
+0x00: Speed control
 0x01: Turn control
-0x02: Speed control
+0x02: Heading sensor
