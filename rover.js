@@ -6,11 +6,15 @@ var Rover = function(x, y) {
 	this.pc = 0x10;
 	this.cc = 0x00;
 	this.regA = 0x00;
+	this.regB = 0x00;
 	this.heading = 0x00;
 	this.speed = 0x00;
 	this.turn = 0x00;
 	this.running = true;
 	this.icount = 0;
+	this.carry = 0;
+	this.overflow = 0;
+	this.sc = 0;
 };
 
 Rover.prototype.draw = function(display) {
@@ -103,6 +107,15 @@ Rover.prototype.step = function() {
 	console.log("PC: " + this.pc + " A: " + this.regA + " Heading: " + this.heading + " Turn: " + this.turn + " Speed: " + this.speed);
 };
 
+Rover.prototype.add_clamp = function(arg1, arg2) {
+	var res = arg1 + arg2;
+	return this.clamp(res);
+};
+
+Rover.prototype.clamp = function(val) {
+	return val & 0b11111111;
+}
+
 Rover.prototype.run_instruction = function(inst) {
 	var addr = this.get_address(inst);
 	var val = this.get_value(inst);
@@ -114,6 +127,15 @@ Rover.prototype.run_instruction = function(inst) {
 			this.set_mem(addr, this.regA);
 			break;
 		case 'CMP':
+			var as = this.byte_val(this.regA);
+			var vs = this.byte_val(val);
+			if (as > vs) {
+				this.sc = 1;
+			} else if (as < vs) {
+				this.sc = -1;
+			} else {
+				this.sc = 0;
+			}
 			if (this.regA > val) {
 				this.cc = 1;
 			} else if (this.regA < val) {
@@ -132,6 +154,107 @@ Rover.prototype.run_instruction = function(inst) {
 			break;
 		case 'HLT':
 			this.running = false;
+			break;
+		case "ADC":
+			this.regA += this.carry;
+		case "ADD":
+			if (this.regA + val > 0xFF)
+				this.overflow = 1;
+			else
+				this.overflow = 0;
+			if ((this.regA < 128 && (this.regA + val) >= 128) ||
+				(this.regA >= 128 && (this.regA + val) < 128))
+				this.carry = 1;
+			else
+				this.carry = 0;
+			this.regA = this.add_clamp(this.regA, val);
+			break;
+		case "SBB":
+			this.regA -= this.carry;
+		case "SUB":
+			if (this.regA + val > 0xFF)
+				this.overflow = 1;
+			else
+				this.overflow = 0;
+			if ((this.regA < 128 && (this.regA + val) >= 128) ||
+				(this.regA >= 128 && (this.regA + val) < 128))
+				this.carry = 1;
+			else
+				this.carry = 0;
+			this.regA = this.add_clamp(this.regA, -1 * val);
+			break;
+		case "MUL":
+			if (this.regA * val > 0xFF) {
+				this.overflow = 1;
+				this.carry = 1;
+			} else {
+				this.overflow = 0;
+				this.carry = 0;
+			}
+			this.regA = this.clamp(this.regA * val);
+			break;
+		case "DIV":
+			if ((this.regA / val) >> 0 > 0xFF) {
+				this.overflow = 1;
+				this.carry = 1;
+			} else {
+				this.overflow = 0;
+				this.carry = 0;
+			}
+			this.regA = this.clamp((this.regA / val) >> 0);
+			this.regB = this.clamp(this.regA % val);
+			break;
+		case "JLT":
+			if (this.cc == -1) {
+				this.pc = addr;
+			}
+			break;
+		case "JGT":
+			if (this.cc == 1) {
+				this.pc = addr;
+			}
+			break;
+		case "JNE":
+			if (this.cc != 0) {
+				this.pc = addr;
+			}
+			break;
+		case "AND":
+			this.regA = this.regA & val;
+			break;
+		case "ORR":
+			this.regA = this.regA | val;
+			break;
+		case "NOT":
+			this.regA = ~this.regA;
+			break;
+		case "XOR":
+			this.regA = this.regA ^ val;
+			break;
+		case "CLC":
+			this.carry = 0;
+			break;
+		case "STC":
+			this.carry = 1;
+			break;
+		case "ROR":
+			break;
+		case "ROL":
+			break;
+		case "RRC":
+			break;
+		case "RLC":
+			break;
+		case "SHR":
+			break;
+		case "SHL":
+			break;
+		case "XCH":
+			var aval = this.regA;
+			this.regA = val;
+			this.set_mem(addr, aval);
+			break;
+		case "NOP":
 			break;
 	}
 };

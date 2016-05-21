@@ -51,6 +51,7 @@ TRN	JMP LOP
 					var asm = new Assembler($('#assembly').val());
 					var cmp = asm.assemble();
 					cmp = new Uint8Array(cmp);
+					window.localStorage.setItem("rover-program", cmp);
 					var html = '';
 					for (var i = 0; i < cmp.length; i += 2) {
 						html = html + '<br />' +

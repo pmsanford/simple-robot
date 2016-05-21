@@ -33,7 +33,7 @@ Assembler.prototype.get_inst_bin = function(mnem) {
 			return 0b00001000;
 		case "SUB":
 			return 0b00010000;
-		case "SUF":
+		case "SBB":
 			return 0b00011000;
 		case "MUL":
 			return 0b00100000;
