@@ -238,21 +238,40 @@ Rover.prototype.run_instruction = function(inst) {
 			this.carry = 1;
 			break;
 		case "ROR":
+			console.log("Not implemented");
 			break;
 		case "ROL":
+			console.log("Not implemented");
 			break;
 		case "RRC":
+			console.log("Not implemented");
 			break;
 		case "RLC":
+			console.log("Not implemented");
 			break;
 		case "SHR":
+			console.log("Not implemented");
 			break;
 		case "SHL":
+			console.log("Not implemented");
 			break;
 		case "XCH":
 			var aval = this.regA;
 			this.regA = val;
 			this.set_mem(addr, aval);
+			break;
+		case "JSG":
+			if (this.sc == 1) {
+				this.pc = addr;
+			}
+			break;
+		case "JSL":
+			if (this.sc == -1) {
+				this.pc = addr;
+			}
+			break;
+		case "LJP":
+			console.log("Not implemented");
 			break;
 		case "NOP":
 			break;
