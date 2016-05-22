@@ -17,15 +17,15 @@
 		<div id="gamediv"></div>
 		<div><textarea id="assembly" cols="100" rows="25">	LDR	!127
 	STR	[!1]
-LOP	LDR	[!0]
+LOP	LDR	[!2]
 	CMP	!4
 	JEQ	TRN
-TRN	JMP LOP
-	LDR	!0
+	JMP LOP
+TRN	LDR	!0
 	STR	[!1]
 	LDR	!127
-	STR	[!2]
-	HLT	0</textarea> <div id="tdiv" style="display: inline-block; vertical-align: top; font-family: monospace"></div><div style="vertical-align: bottom; display: inline-block"><button id="asmbtn">Assemble</button></div></div>
+	STR	[!0]
+	HLT	0</textarea> <div id="tdiv" style="display: inline-block; vertical-align: top; font-family: monospace"></div><div style="vertical-align: bottom; display: inline-block"><button id="asmbtn">Assemble</button> <button id="load">Load</button></div></div>
 		<script type="text/javascript">
 			$(document).delegate('#assembly', 'keydown', function(e) {
 				var keycode = e.keyCode || e.which;
@@ -51,7 +51,7 @@ TRN	JMP LOP
 					var asm = new Assembler($('#assembly').val());
 					var cmp = asm.assemble();
 					cmp = new Uint8Array(cmp);
-					window.localStorage.setItem("rover-program", cmp);
+					window.localStorage.setItem("rover-program", Assembler.serialize(cmp));
 					var html = '';
 					for (var i = 0; i < cmp.length; i += 2) {
 						html = html + '<br />' +
@@ -60,6 +60,29 @@ TRN	JMP LOP
 						fmt_bin(cmp[i+1]);
 					}
 					$('#tdiv').html(html);
+				});
+				$('#load').on('click', function() {
+					var prog = Assembler.deserialize(window.localStorage.getItem("rover-program"));
+					/*
+					var asmUrl = JSON.parse(window.localStorage.getItem("rover-program"));
+					var xhr = new XMLHttpRequest();
+					xhr.open("GET", asmUrl, true);
+					xhr.responseType = "arraybuffer";
+					xhr.addEventListener("load", function() {
+						if (xhr.status === 200) {
+							blob = new Blob([xhr.response], {type: "application/octet-binary"});
+							var reader = new FileReader();
+							reader.addEventListener("load", function(evt) {
+								var u8a = new Uint8Array(reader.result);
+								Game.reset_rover(u8a);
+							});
+							reader.readAsArrayBuffer(blob);
+						}
+					}, false);
+
+					xhr.send();
+					*/
+					Game.reset_rover(prog);
 				});
 			});
 			

@@ -121,3 +121,15 @@ Assembler.prototype.pass_two = function(i, toks) {
 	this.compiled.push(bin);
 	this.compiled.push(tbin);
 };
+
+Assembler.serialize = function(program) {
+	return String.fromCharCode.apply(null, program);
+};
+
+Assembler.deserialize = function(progstr) {
+	var prog = new Uint8Array(progstr.length);
+	for (var i = 0; i < progstr.length; i++) {
+		prog[i] = progstr.charCodeAt(i);
+	}
+	return prog;
+};
