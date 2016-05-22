@@ -63,25 +63,6 @@ TRN	LDR	!0
 				});
 				$('#load').on('click', function() {
 					var prog = Assembler.deserialize(window.localStorage.getItem("rover-program"));
-					/*
-					var asmUrl = JSON.parse(window.localStorage.getItem("rover-program"));
-					var xhr = new XMLHttpRequest();
-					xhr.open("GET", asmUrl, true);
-					xhr.responseType = "arraybuffer";
-					xhr.addEventListener("load", function() {
-						if (xhr.status === 200) {
-							blob = new Blob([xhr.response], {type: "application/octet-binary"});
-							var reader = new FileReader();
-							reader.addEventListener("load", function(evt) {
-								var u8a = new Uint8Array(reader.result);
-								Game.reset_rover(u8a);
-							});
-							reader.readAsArrayBuffer(blob);
-						}
-					}, false);
-
-					xhr.send();
-					*/
 					Game.reset_rover(prog);
 				});
 			});
