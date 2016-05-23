@@ -314,7 +314,6 @@ Rover.prototype.doMove = function() {
 		if (calc_heading === 1 || calc_heading === 2 || calc_heading === 3)
 			this.fx += speed;
 		this.update_coords();
-		console.log("Updating position: " + this.x + ", " + this.y);
 	}
 };
 
