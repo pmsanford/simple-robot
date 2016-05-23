@@ -11,15 +11,13 @@ var GameController = function() {
 };
 
 GameController.prototype.reset_rover = function(program) {
-	this.engine.lock();
 	this.scheduler.remove(this.rover);
 	this.rover = new Rover(10, 10);
-	this.scheduler.add(this.rover);
+	this.scheduler.add(this.rover, true);
 	var opts = this.display.getOptions();
 	this.status = new RoverStatus(opts.width - 50, 0, this.rover);
 	this.rover.load(program);
 	this.render();
-	this.engine.unlock();
 };
 
 GameController.prototype.init = function(targetDiv) {

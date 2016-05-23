@@ -59,7 +59,14 @@ Rover.prototype.get_hardware = function(addr) {
 	if (addr == 0x01)
 		return this.turn;
 	if (addr == 0x02)
-		return this.heading;
+		return this.get_heading();
+};
+
+Rover.prototype.get_heading = function() {
+	var calc_heading = Math.round(this.heading);
+	if (calc_heading === 8)
+		calc_heading = 0;
+	return calc_heading;
 };
 
 Rover.prototype.byte_val = function(val) {
@@ -284,25 +291,25 @@ Rover.prototype.decode = function(ibyte, target) {
 
 Rover.prototype.doTurning = function() {
 	if (this.turn != 0) {
-		var dir = this.turn / Math.abs(this.turn);
-		this.heading += dir;
-		if (this.heading === 8)
-			this.heading = 0;
-		if (this.heading === -1)
-			this.heading = 7;
+		this.heading += this.turn * 0.001; // Maxes out at 1.3 dir changes in one clock cycle
+		if (this.heading >= 8)
+			this.heading -= 8;
+		if (this.heading < 0)
+			this.heading += 7;
 	}
 }
 
 Rover.prototype.doMove = function() {
 	if (this.speed != 0) {
+		var calc_heading = this.get_heading();
 		var dir = this.speed / Math.abs(this.speed);
-		if (this.heading === 7 || this.heading === 0 || this.heading === 1)
+		if (calc_heading === 7 || calc_heading === 0 || calc_heading === 1)
 			this.y -= dir;
-		if (this.heading === 5 || this.heading === 4 || this.heading === 3)
+		if (calc_heading === 5 || calc_heading === 4 || calc_heading === 3)
 			this.y += dir;
-		if (this.heading === 5 || this.heading === 6 || this.heading === 7)
+		if (calc_heading === 5 || calc_heading === 6 || calc_heading === 7)
 			this.x -= dir;
-		if (this.heading === 1 || this.heading === 2 || this.heading === 3)
+		if (calc_heading === 1 || calc_heading === 2 || calc_heading === 3)
 			this.x += dir;
 		console.log("Updating position: " + this.x + ", " + this.y);
 	}
@@ -318,7 +325,5 @@ Rover.prototype.act = function() {
 		this.step();
 	}
 	this.icount += 1;
-	if (this.icount % 10 === 0) {
-		this.updateHardware();
-	}
+	this.updateHardware();
 }
