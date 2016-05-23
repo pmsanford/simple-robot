@@ -26,7 +26,7 @@ TRN	LDR	!0
 	STR	[!1]
 	LDR	!127
 	STR	[!0]
-	HLT	0</textarea> <div id="tdiv" style="display: inline-block; vertical-align: top; font-family: monospace"></div><div style="vertical-align: bottom; display: inline-block"><button id="asmbtn">Assemble</button> <button id="load">Load</button></div></div>
+	HLT	0</textarea> <button id="link">Link</button> <div id="tdiv" style="display: inline-block; vertical-align: top; font-family: monospace"></div><div style="vertical-align: bottom; display: inline-block"><button id="asmbtn">Assemble</button> <button id="load">Load</button></div></div>
 		<script type="text/javascript">
 			$(document).delegate('#assembly', 'keydown', function(e) {
 				var keycode = e.keyCode || e.which;
@@ -66,6 +66,17 @@ TRN	LDR	!0
 					var prog = Assembler.deserialize(window.localStorage.getItem("rover-program"));
 					Game.reset_rover(prog);
 				});
+				$('#link').on('click', function() {
+					var prog = $('#assembly').val();
+					prog = encodeURIComponent(prog);
+					var base = window.location.href.split('?')[0];
+					window.history.replaceState(prog, "", base + "?program=" + prog);
+				});
+				var prog = get_param("program");
+				if (prog !== undefined && prog !== null && prog !== "") {
+					prog = decodeURIComponent(prog);
+					$('#assembly').val(prog);
+				}
 			});
 			
 			function fmt_bin(num) {
@@ -74,6 +85,17 @@ TRN	LDR	!0
 			  rstr = rstr.substr(rstr.length - 8);
 			  rstr = rstr.substr(0, 4) + " " + rstr.substr(4);
 			  return rstr;
+			}
+
+			//from http://stackoverflow.com/questions/901115/how-can-i-get-query-string-values-in-javascript
+			function get_param(name, url) {
+			    if (!url) url = window.location.href;
+			    name = name.replace(/[\[\]]/g, "\\$&");
+			    var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+			        results = regex.exec(url);
+			    if (!results) return null;
+			    if (!results[2]) return '';
+			    return decodeURIComponent(results[2].replace(/\+/g, " "));
 			}
 		</script>
 	</body>
