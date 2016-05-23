@@ -293,7 +293,7 @@ Rover.prototype.decode = function(ibyte, target) {
 	return new Instruction(ibyte, target);
 };
 
-Rover.prototype.doTurning = function() {
+Rover.prototype.do_turning = function() {
 	if (this.turn != 0) {
 		this.heading += this.turn * 0.001; // Maxes out at 1.3 dir changes in one clock cycle
 		if (this.heading >= 8)
@@ -303,7 +303,7 @@ Rover.prototype.doTurning = function() {
 	}
 };
 
-Rover.prototype.doMove = function() {
+Rover.prototype.do_move = function() {
 	if (this.speed != 0) {
 		var calc_heading = this.get_heading();
 		var speed = this.speed * 0.01;
@@ -336,8 +336,8 @@ Rover.prototype.update_coords = function() {
 };
 
 Rover.prototype.updateHardware = function() {
-	this.doTurning();
-	this.doMove();
+	this.do_turning();
+	this.do_move();
 };
 
 Rover.prototype.act = function() {

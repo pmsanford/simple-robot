@@ -1,13 +1,13 @@
 var Instruction = function(ibyte, target) {
 	this._ibyte = ibyte & 0b11111000;
 	this.target = target;
-	this.instruction = this._getInstString();
+	this.instruction = this.get_instruction_string();
 	this.immediate = (ibyte & 0b100) > 0;
 	this.indirect = (ibyte & 0b10) > 0;
 	this.register = (ibyte & 0b1) > 0;
 };
 
-Instruction.prototype._getInstString = function() {
+Instruction.prototype.get_instruction_string = function() {
 	switch (this._ibyte) {
 		case 0b00000000:
 			return 'ADD';

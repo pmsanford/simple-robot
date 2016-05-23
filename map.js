@@ -4,7 +4,7 @@ var GameMap = function(x, y) {
 	this.objects = {};
 };
 
-GameMap.prototype.getCharAt = function(x, y) {
+GameMap.prototype.get_char_at = function(x, y) {
 	var xy = new XY(x, y);
 	if (this.objects[xy] !== undefined) {
 		return this.objects[xy].char;
@@ -15,7 +15,7 @@ GameMap.prototype.getCharAt = function(x, y) {
 	return '.';
 };
 
-GameMap.prototype.addObject = function(x, y, object) {
+GameMap.prototype.add_object = function(x, y, object) {
 	var xy = new XY(x, y);
 	if (this.objects[xy] !== undefined) {
 		this.objects.remove(xy);
@@ -26,7 +26,7 @@ GameMap.prototype.addObject = function(x, y, object) {
 GameMap.prototype.draw = function(display) {
 	for (var x = 0; x < this.width; x++) {
 		for (var y = 0; y < this.height; y++) {
-			display.draw(x, y, this.getCharAt(x, y));
+			display.draw(x, y, this.get_char_at(x, y));
 		}
 	}
 };
