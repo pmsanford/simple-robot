@@ -1,8 +1,9 @@
 var GameController = function() {
 	this.display = new ROT.Display();
+	this.logger = new DebugLogger(true);
 	var opts = this.display.getOptions();
 	this.map = new GameMap(opts.width - 50, opts.height);
-	this.rover = new Rover(10, 10);
+	this.rover = new Rover(10, 10, this.logger, this);
 	this.status = new RoverStatus(opts.width - 50, 0, this.rover);
 	this.engine = null;
 	this.scheduler = null;
@@ -12,7 +13,7 @@ var GameController = function() {
 
 GameController.prototype.reset_rover = function(program) {
 	this.scheduler.remove(this.rover);
-	this.rover = new Rover(10, 10);
+	this.rover = new Rover(10, 10, this.logger, this);
 	this.scheduler.add(this.rover, true);
 	var opts = this.display.getOptions();
 	this.status = new RoverStatus(opts.width - 50, 0, this.rover);
@@ -45,6 +46,10 @@ GameController.prototype.init = function(targetDiv) {
 	this.scheduler.add(this.rc, true);
 	this.engine.start();
 	this.render();
+};
+
+GameController.prototype.can_move = function(x, y) {
+	return !this.map.check_collision(x, y);
 };
 
 GameController.prototype.render = function() {

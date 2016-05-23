@@ -30,3 +30,18 @@ GameMap.prototype.draw = function(display) {
 		}
 	}
 };
+
+GameMap.prototype.check_collision = function(x, y) {
+	if (x === 0 || x === this.width - 1 ||
+		y === 0 || y === this.height - 1) {
+		return true;
+	}
+
+	var xy = new XY(x, y);
+
+	if (this.objects[xy] !== undefined) {
+		return this.objects[xy].blocking;
+	}
+
+	return false;
+};

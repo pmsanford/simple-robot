@@ -1,4 +1,4 @@
-var Rover = function(x, y) {
+var Rover = function(x, y, logger, game) {
 	this.x = x;
 	this.y = y;
 	this.fx = x * 1.0;
@@ -17,6 +17,8 @@ var Rover = function(x, y) {
 	this.carry = 0;
 	this.overflow = 0;
 	this.sc = 0;
+	this.game = game;
+	this.logger = logger;
 };
 
 Rover.prototype.draw = function(display) {
@@ -110,10 +112,10 @@ Rover.prototype.step = function() {
 	var tbyte = this.mem[this.pc + 1];
 	this.pc += 2;
 	var inst = this.decode(ibyte, tbyte);
-	console.log(inst.instruction + ": " + inst.target + "(" + this.get_address(inst) + ")");
-	console.log("Immed: " + inst.immediate + " Indir: " + inst.indirect + " Reg: " + inst.register);
+	this.logger.log("rover.instruction", inst.instruction + ": " + inst.target + "(" + this.get_address(inst) + ")");
+	this.logger.log("rover.instruction", "Immed: " + inst.immediate + " Indir: " + inst.indirect + " Reg: " + inst.register);
 	this.run_instruction(inst);
-	console.log("PC: " + this.pc + " A: " + this.regA + " Heading: " + this.heading + " Turn: " + this.turn + " Speed: " + this.speed);
+	this.logger.log("rover.instruction", "PC: " + this.pc + " A: " + this.regA + " Heading: " + this.heading + " Turn: " + this.turn + " Speed: " + this.speed);
 };
 
 Rover.prototype.add_clamp = function(arg1, arg2) {
@@ -305,6 +307,7 @@ Rover.prototype.doMove = function() {
 	if (this.speed != 0) {
 		var calc_heading = this.get_heading();
 		var speed = this.speed * 0.01;
+		var oldx = this.fx, oldy = this.fy;
 		if (calc_heading === 7 || calc_heading === 0 || calc_heading === 1)
 			this.fy -= speed;
 		if (calc_heading === 5 || calc_heading === 4 || calc_heading === 3)
@@ -313,13 +316,23 @@ Rover.prototype.doMove = function() {
 			this.fx -= speed;
 		if (calc_heading === 1 || calc_heading === 2 || calc_heading === 3)
 			this.fx += speed;
-		this.update_coords();
+		if (!this.update_coords()) {
+			this.fx = oldx;
+			this.fy = oldy;
+		}
 	}
 };
 
 Rover.prototype.update_coords = function() {
+	var oldx = this.x, oldy = this.y;
 	this.x = Math.round(this.fx);
 	this.y = Math.round(this.fy);
+	if (!this.game.can_move(this.x, this.y)) {
+		this.x = oldx;
+		this.y = oldy;
+		return false;
+	}
+	return true;
 };
 
 Rover.prototype.updateHardware = function() {
