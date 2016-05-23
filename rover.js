@@ -1,6 +1,8 @@
 var Rover = function(x, y) {
 	this.x = x;
 	this.y = y;
+	this.fx = x * 1.0;
+	this.fy = y * 1.0;
 	this.char = 'R';
 	this.mem = new Uint8Array(0x100);
 	this.pc = 0x10;
@@ -297,28 +299,34 @@ Rover.prototype.doTurning = function() {
 		if (this.heading < 0)
 			this.heading += 7;
 	}
-}
+};
 
 Rover.prototype.doMove = function() {
 	if (this.speed != 0) {
 		var calc_heading = this.get_heading();
-		var dir = this.speed / Math.abs(this.speed);
+		var speed = this.speed * 0.01;
 		if (calc_heading === 7 || calc_heading === 0 || calc_heading === 1)
-			this.y -= dir;
+			this.fy -= speed;
 		if (calc_heading === 5 || calc_heading === 4 || calc_heading === 3)
-			this.y += dir;
+			this.fy += speed;
 		if (calc_heading === 5 || calc_heading === 6 || calc_heading === 7)
-			this.x -= dir;
+			this.fx -= speed;
 		if (calc_heading === 1 || calc_heading === 2 || calc_heading === 3)
-			this.x += dir;
+			this.fx += speed;
+		this.update_coords();
 		console.log("Updating position: " + this.x + ", " + this.y);
 	}
-}
+};
+
+Rover.prototype.update_coords = function() {
+	this.x = Math.round(this.fx);
+	this.y = Math.round(this.fy);
+};
 
 Rover.prototype.updateHardware = function() {
 	this.doTurning();
 	this.doMove();
-}
+};
 
 Rover.prototype.act = function() {
 	if (this.running) {
@@ -326,4 +334,4 @@ Rover.prototype.act = function() {
 	}
 	this.icount += 1;
 	this.updateHardware();
-}
+};
