@@ -20,6 +20,10 @@ Controller.prototype.act = function() {
 };
 
 Controller.prototype.handleEvent = function(e) {
+	var assembly = $('#assembly');
+	if (assembly.is(':focus')) {
+		return;
+	}
 	if (e.keyCode == ROT.VK_SPACE && !this.running) {
 		window.removeEventListener("keydown", this);
 		this.game.engine.unlock();
