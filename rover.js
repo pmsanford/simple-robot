@@ -19,6 +19,9 @@ var Rover = function(x, y, logger, game) {
 	this.sc = 0;
 	this.game = game;
 	this.logger = logger;
+	this.hardware = {0x0: new SpeedControl(this),
+	                 0x1: new TurnControl(this),
+	                 0x2: new HeadingSensor(this)};
 };
 
 Rover.prototype.draw = function(display) {
@@ -42,10 +45,9 @@ Rover.prototype.set_mem = function(addr, value) {
 };
 
 Rover.prototype.set_hardware = function(addr, val) {
-	if (addr === 0x00)
-		this.speed = this.byte_val(val);
-	if (addr === 0x01)
-		this.turn = this.byte_val(val);
+  if (addr in this.hardware) {
+    this.hardware[addr].write_data(val);
+  }
 };
 
 Rover.prototype.get_mem = function(addr, value) {
@@ -58,12 +60,11 @@ Rover.prototype.get_mem = function(addr, value) {
 };
 
 Rover.prototype.get_hardware = function(addr) {
-	if (addr === 0x00)
-		return this.speed;
-	if (addr === 0x01)
-		return this.turn;
-	if (addr === 0x02)
-		return this.get_heading();
+  if (addr in this.hardware) {
+    return this.hardware[addr].read_data();
+  } else {
+    return 0x0;
+  }
 };
 
 Rover.prototype.get_heading = function() {
