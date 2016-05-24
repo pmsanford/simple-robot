@@ -42,9 +42,9 @@ Rover.prototype.set_mem = function(addr, value) {
 };
 
 Rover.prototype.set_hardware = function(addr, val) {
-	if (addr == 0x00)
+	if (addr === 0x00)
 		this.speed = this.byte_val(val);
-	if (addr == 0x01)
+	if (addr === 0x01)
 		this.turn = this.byte_val(val);
 };
 
@@ -58,11 +58,11 @@ Rover.prototype.get_mem = function(addr, value) {
 };
 
 Rover.prototype.get_hardware = function(addr) {
-	if (addr == 0x00)
+	if (addr === 0x00)
 		return this.speed;
-	if (addr == 0x01)
+	if (addr === 0x01)
 		return this.turn;
-	if (addr == 0x02)
+	if (addr === 0x02)
 		return this.get_heading();
 };
 
@@ -89,7 +89,7 @@ Rover.prototype.get_value = function(inst) {
 		return inst.target;
 	}
 	return this.get_mem(address);
-}
+};
 
 Rover.prototype.get_address = function(inst) {
 	var tarval = this.byte_val(inst.target);
@@ -159,7 +159,7 @@ Rover.prototype.run_instruction = function(inst) {
 			this.pc = addr;
 			break;
 		case 'JEQ':
-			if (this.cc == 0) {
+			if (this.cc === 0) {
 				this.pc = addr;
 			}
 			break;
@@ -173,8 +173,8 @@ Rover.prototype.run_instruction = function(inst) {
 				this.overflow = 1;
 			else
 				this.overflow = 0;
-			if ((this.regA < 128 && (this.regA + val) >= 128) ||
-				(this.regA >= 128 && (this.regA + val) < 128))
+			if ((this.regA < 128 && (this.regA + val) >== 128) ||
+				(this.regA >== 128 && (this.regA + val) < 128))
 				this.carry = 1;
 			else
 				this.carry = 0;
@@ -187,8 +187,8 @@ Rover.prototype.run_instruction = function(inst) {
 				this.overflow = 1;
 			else
 				this.overflow = 0;
-			if ((this.regA < 128 && (this.regA + val) >= 128) ||
-				(this.regA >= 128 && (this.regA + val) < 128))
+			if ((this.regA < 128 && (this.regA + val) >== 128) ||
+				(this.regA >== 128 && (this.regA + val) < 128))
 				this.carry = 1;
 			else
 				this.carry = 0;
@@ -216,17 +216,17 @@ Rover.prototype.run_instruction = function(inst) {
 			this.regB = this.clamp(this.regA % val);
 			break;
 		case "JLT":
-			if (this.cc == -1) {
+			if (this.cc === -1) {
 				this.pc = addr;
 			}
 			break;
 		case "JGT":
-			if (this.cc == 1) {
+			if (this.cc === 1) {
 				this.pc = addr;
 			}
 			break;
 		case "JNE":
-			if (this.cc != 0) {
+			if (this.cc !== 0) {
 				this.pc = addr;
 			}
 			break;
@@ -272,12 +272,12 @@ Rover.prototype.run_instruction = function(inst) {
 			this.set_mem(addr, aval);
 			break;
 		case "JSG":
-			if (this.sc == 1) {
+			if (this.sc === 1) {
 				this.pc = addr;
 			}
 			break;
 		case "JSL":
-			if (this.sc == -1) {
+			if (this.sc === -1) {
 				this.pc = addr;
 			}
 			break;

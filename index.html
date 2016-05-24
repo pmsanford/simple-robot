@@ -32,7 +32,7 @@ TRN	LDR	!0
 				var keycode = e.keyCode || e.which;
 
 				// From: http://stackoverflow.com/questions/6637341/use-tab-to-indent-in-textarea
-				if (keycode == 9) {
+				if (keycode === 9) {
 				    e.preventDefault();
 				    var start = $(this).get(0).selectionStart;
 				    var end = $(this).get(0).selectionEnd;

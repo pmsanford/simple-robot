@@ -16,10 +16,10 @@ RoverStatus.prototype.draw = function(display) {
   	  var ostring = "00" + this.rover.mem[x + y].toString(16);
   	  var color = '#ddd';
   	  var oldcolor = display.getOptions().fg;
-  	  if ((x+y) == this.rover.pc) {
+  	  if ((x+y) === this.rover.pc) {
   	    color = '#0ff';
   	  }
-  	  if ((x+y) == this.rover.pc + 1) {
+  	  if ((x+y) === this.rover.pc + 1) {
   	    color = '#0cc';
   	  }
   	  display.setOptions({fg: color});
