@@ -125,7 +125,7 @@ Rover.prototype.add_clamp = function(arg1, arg2) {
 
 Rover.prototype.clamp = function(val) {
 	return val & 0b11111111;
-}
+};
 
 Rover.prototype.run_instruction = function(inst) {
 	var addr = this.get_address(inst);
@@ -173,8 +173,8 @@ Rover.prototype.run_instruction = function(inst) {
 				this.overflow = 1;
 			else
 				this.overflow = 0;
-			if ((this.regA < 128 && (this.regA + val) >== 128) ||
-				(this.regA >== 128 && (this.regA + val) < 128))
+			if ((this.regA < 128 && (this.regA + val) >= 128) ||
+				(this.regA >= 128 && (this.regA + val) < 128))
 				this.carry = 1;
 			else
 				this.carry = 0;
@@ -187,8 +187,8 @@ Rover.prototype.run_instruction = function(inst) {
 				this.overflow = 1;
 			else
 				this.overflow = 0;
-			if ((this.regA < 128 && (this.regA + val) >== 128) ||
-				(this.regA >== 128 && (this.regA + val) < 128))
+			if ((this.regA < 128 && (this.regA + val) >= 128) ||
+				(this.regA >= 128 && (this.regA + val) < 128))
 				this.carry = 1;
 			else
 				this.carry = 0;
