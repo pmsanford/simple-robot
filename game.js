@@ -43,7 +43,7 @@ GameController.prototype.init = function(targetDiv) {
 	this.rover.load(prog);
 	this.scheduler = new ROT.Scheduler.Simple();
 	this.engine = new ROT.Engine(this.scheduler);
-	this.controller = new Controller(this);
+	this.controller = new RoverController(this);
 	this.rc = new RenderController(this);
 	this.scheduler.add(this.controller, true);
 	this.scheduler.add(this.rover, true);

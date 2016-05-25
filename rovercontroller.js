@@ -1,10 +1,10 @@
-var Controller = function(game) {
+var RoverController = function(game) {
 	this.game = game;
 	this.running = false;
 	this.stop = false;
 };
 
-Controller.prototype.act = function() {
+RoverController.prototype.act = function() {
 	if (!this.running || this.stop) {
 		this.game.engine.lock();
 		if (this.stop) {
@@ -19,7 +19,7 @@ Controller.prototype.act = function() {
 	}
 };
 
-Controller.prototype.handleEvent = function(e) {
+RoverController.prototype.handleEvent = function(e) {
 	var assembly = $('#assembly');
 	if (assembly.is(':focus')) {
 		return;
