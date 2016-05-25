@@ -20,11 +20,15 @@ Controller.prototype.act = function() {
 };
 
 Controller.prototype.handleEvent = function(e) {
-	if (e.keyCode == ROT.VK_SPACE && !this.running) {
+	var assembly = $('#assembly');
+	if (assembly.is(':focus')) {
+		return;
+	}
+	if (e.keyCode === ROT.VK_SPACE && !this.running) {
 		window.removeEventListener("keydown", this);
 		this.game.engine.unlock();
 	}
-	if (e.keyCode == ROT.VK_R) {
+	if (e.keyCode === ROT.VK_R) {
 		if (this.running) {
 			this.stop = true;
 		} else {
