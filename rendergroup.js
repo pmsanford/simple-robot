@@ -14,4 +14,4 @@ RenderGroup.prototype.add = function(drawable) {
 
 RenderGroup.prototype.remove = function(drawable) {
 	this.render_targets.splice(this.render_targets.indexOf(drawable), 1);
-}
+};
