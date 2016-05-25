@@ -10,6 +10,7 @@ var GameController = function() {
 	this.controller = null;
 	this.rc = null;
 	this.game_group = new RenderGroup();
+	this.garage_group = new RenderGroup();
 	this.current_groups = [this.game_group];
 };
 
@@ -52,6 +53,23 @@ GameController.prototype.init = function(targetDiv) {
 	this.game_group.add(this.map);
 	this.game_group.add(this.rover);
 	this.game_group.add(this.status);
+	this.garage = new Garage(this.rover, this.display, []);
+	this.garage_group.add(this.garage);
+	this.garage_controller = new GarageController(this.garage, 
+													this.hide_garage.bind(this), 
+													this.render.bind(this));
+	this.render();
+};
+
+GameController.prototype.show_garage = function() {
+	this.current_groups = [this.garage_group];
+	this.garage_controller.hook();
+	this.render();
+};
+
+GameController.prototype.hide_garage = function() {
+	this.current_groups = [this.game_group];
+	this.controller.hook();
 	this.render();
 };
 

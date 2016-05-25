@@ -19,6 +19,14 @@ RoverController.prototype.act = function() {
 	}
 };
 
+RoverController.prototype.unhook = function() {
+	window.removeEventListener("keydown", this);
+};
+
+RoverController.prototype.hook = function() {
+	window.addEventListener("keydown", this);
+};
+
 RoverController.prototype.handleEvent = function(e) {
 	var assembly = $('#assembly');
 	if (assembly.is(':focus')) {
@@ -27,6 +35,10 @@ RoverController.prototype.handleEvent = function(e) {
 	if (e.keyCode === ROT.VK_SPACE && !this.running) {
 		window.removeEventListener("keydown", this);
 		this.game.engine.unlock();
+	}
+	if (e.keyCode === ROT.VK_G && !this.running) {
+		this.unhook();
+		this.game.show_garage();
 	}
 	if (e.keyCode === ROT.VK_R) {
 		if (this.running) {
