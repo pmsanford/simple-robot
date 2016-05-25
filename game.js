@@ -9,15 +9,19 @@ var GameController = function() {
 	this.scheduler = null;
 	this.controller = null;
 	this.rc = null;
+	this.game_group = new RenderGroup();
+	this.current_groups = [this.game_group];
 };
 
 GameController.prototype.reset_rover = function(program) {
 	this.scheduler.remove(this.rover);
+	this.game_group.remove(this.rover);
 	this.rover = new Rover(10, 10, this.logger, this);
 	this.scheduler.add(this.rover, true);
 	var opts = this.display.getOptions();
 	this.status = new RoverStatus(opts.width - 50, 0, this.rover);
 	this.rover.load(program);
+	this.game_group.add(this.rover);
 	this.render();
 };
 
@@ -45,6 +49,9 @@ GameController.prototype.init = function(targetDiv) {
 	this.scheduler.add(this.rover, true);
 	this.scheduler.add(this.rc, true);
 	this.engine.start();
+	this.game_group.add(this.map);
+	this.game_group.add(this.rover);
+	this.game_group.add(this.status);
 	this.render();
 };
 
@@ -54,9 +61,9 @@ GameController.prototype.can_move = function(x, y) {
 
 GameController.prototype.render = function() {
 	this.display.clear();
-	this.map.draw(this.display);
-	this.rover.draw(this.display);
-	this.status.draw(this.display);
+	for (var i = 0; i < this.current_groups.length; i++) {
+		this.current_groups[i].draw(this.display);
+	}
 };
 
 Game = new GameController();
