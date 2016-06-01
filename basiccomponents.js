@@ -1,5 +1,5 @@
 var HeadingSensor = function(rover) {
-  RoverComponent.call(this, rover);
+  RoverComponent.call(this, rover, "Heading Sensor");
 };
 
 HeadingSensor.extend(RoverComponent);
@@ -9,7 +9,7 @@ HeadingSensor.prototype.read_data = function() {
 };
 
 var SpeedControl = function(rover) {
-  RoverComponent.call(this, rover);
+  RoverComponent.call(this, rover, "Speed Control");
 };
 SpeedControl.extend(RoverComponent);
 
@@ -22,7 +22,7 @@ SpeedControl.prototype.read_data = function() {
 };
 
 var TurnControl = function(rover) {
-  RoverComponent.call(this, rover);
+  RoverComponent.call(this, rover, "Turn Control");
 }
 TurnControl.extend(RoverComponent);
 

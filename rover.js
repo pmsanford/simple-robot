@@ -24,6 +24,10 @@ var Rover = function(x, y, logger, game) {
 	                 0x2: new HeadingSensor(this)};
 };
 
+Rover.prototype.get_components = function() {
+	return this.hardware;
+};
+
 Rover.prototype.draw = function(display) {
 	display.draw(this.x, this.y, this.char, '#ff0');
 };
