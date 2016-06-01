@@ -13,6 +13,9 @@ GarageController.prototype.handleEvent = function(e) {
 		window.removeEventListener("keydown", this);
 		this.leave();
 	}
+	if (e.keyCode >= ROT.VK_0 && e.keyCode <= ROT.VK_9) {
+		this.garage.select(e.keyCode - ROT.VK_0);
+	}
 	this.draw();
 };
 

@@ -2,6 +2,7 @@ var Garage = function(rover, display, components) {
   this.rover = rover;
   this.display = display;
   this.equipment = components;
+  this.selected = null;
 };
 
 Garage.prototype.draw = function() {
@@ -11,9 +12,11 @@ Garage.prototype.draw = function() {
 		this.display.draw(x, opts.height - 1, '#');
 	}
 
+	var center = opts.width/2>>0;
+
 	for (var y = 0; y < opts.height; y++) {
 		this.display.draw(0, y, '#');
-		this.display.draw(opts.width/2>>0, y, '|');
+		this.display.draw(center, y, '|');
 		this.display.draw(opts.width - 1, y, '#');
 	}
 
@@ -21,9 +24,14 @@ Garage.prototype.draw = function() {
 
 	for (var i = 0; i < 0x10; i++) {
 		var disp = "Empty";
+		var fg = i == this.selected ? "#FF0" : undefined;
 		if (installed[i] !== undefined)
 			disp = installed[i];
 
-		this.display.drawText(2, i + 2, i.toString(16).toUpperCase() + ". " + disp);
+		this.display.drawTextColor(2, i + 2, i.toString(16).toUpperCase() + ". " + disp, fg);
 	}
+};
+
+Garage.prototype.select = function(num) {
+	this.selected = num;
 };
