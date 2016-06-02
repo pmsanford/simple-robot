@@ -53,7 +53,7 @@ GameController.prototype.init = function(targetDiv) {
 	this.game_group.add(this.map);
 	this.game_group.add(this.rover);
 	this.game_group.add(this.status);
-	this.garage = new Garage(this.rover, this.display, [new PositionSensors.X(this.rover), new PositionSensors.Y(this.rover)]);
+	this.garage = new Garage(this.rover, this.display, [new PositionSensors.X(this.rover), new PositionSensors.Y(this.rover), new HeadingSensor(this.rover)]);
 	this.garage_group.add(this.garage);
 	this.garage_controller = new GarageController(this.garage,
 													this.hide_garage.bind(this),

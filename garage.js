@@ -30,6 +30,13 @@ Garage.prototype.draw = function() {
 
 		this.display.drawTextColor(2, i + 2, i.toString(16).toUpperCase() + ". " + disp, fg);
 	}
+	
+	if (this.selected !== null) {
+	  for (i = 0; i < this.equipment.length; i++) {
+	    var fg = get_values(installed).some(function(a) { return types_match(this.equipment[i], a); }.bind(this)) ? "#999" : undefined;
+	    this.display.drawTextColor(center + 2, i + 2, i.toString(16).toUpperCase() + ". " + this.equipment[i], fg);
+	  }
+	}
 };
 
 Garage.prototype.select = function(num) {
