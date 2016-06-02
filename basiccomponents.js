@@ -33,3 +33,25 @@ TurnControl.prototype.write_data = function(data) {
 TurnControl.prototype.read_data = function() {
   return this.rover.turn;
 };
+
+var PositionSensors = {};
+
+PositionSensors.X = function(rover) {
+  RoverComponent.call(this, rover, "Position Sensor (X)");
+};
+
+PositionSensors.X.extend(RoverComponent);
+
+PositionSensors.X.prototype.read_data = function() {
+  return this.rover.x;
+};
+
+PositionSensors.Y = function(rover) {
+  RoverComponent.call(this, rover, "Position Sensor (Y)");
+};
+
+PositionSensors.Y.extend(RoverComponent);
+
+PositionSensors.Y.prototype.read_data = function() {
+  return this.rover.y;
+};
