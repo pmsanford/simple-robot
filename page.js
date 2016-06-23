@@ -1,9 +1,9 @@
 function get_asm() {
-	return $('#assembly').val();
+	return editor.getValue();
 }
 
 function set_asm(val) {
-	$('#assembly').val(val);
+	editor.setValue(val);
 }
 
 function fmt_bin(num) {
@@ -24,27 +24,9 @@ function get_param(name, url) {
     if (!results[2]) return '';
     return decodeURIComponent(results[2].replace(/\+/g, " "));
 }
+var editor = null;
 
 function setup($, Game, Assembler) {
-	$(document).delegate('#assembly', 'keydown', function(e) {
-		var keycode = e.keyCode || e.which;
-
-		// From: http://stackoverflow.com/questions/6637341/use-tab-to-indent-in-textarea
-		if (keycode === 9) {
-		    e.preventDefault();
-		    var start = $(this).get(0).selectionStart;
-		    var end = $(this).get(0).selectionEnd;
-
-		    // set textarea value to: text before caret + tab + text after caret
-		    $(this).val($(this).val().substring(0, start)
-		                + "\t"
-		                + $(this).val().substring(end));
-
-		    // put caret at right position again
-		    $(this).get(0).selectionStart =
-		    $(this).get(0).selectionEnd = start + 1;
-		}
-	});
 	$(document).ready(function() {
 		$('#asmbtn').on('click', function() {
 			var asm = new Assembler(get_asm());
@@ -70,10 +52,17 @@ function setup($, Game, Assembler) {
 			var base = window.location.href.split('?')[0];
 			window.history.replaceState(prog, "", base + "?program=" + prog);
 		});
+        editor = monaco.editor.create(document.getElementById('asm_code'), {
+            language: 'javascript'
+        });
 		var prog = get_param("program");
 		if (prog !== undefined && prog !== null && prog !== "") {
 			prog = decodeURIComponent(prog);
 			set_asm(prog);
+		} else {
+	        $.get('demo.asm', function(asm) {
+	        	set_asm(asm);
+	        });
 		}
 		Game.init($('#gamediv'));
 	});
@@ -84,7 +73,8 @@ requirejs.config({
 		'rot': {
 			exports: 'ROT'
 		}
-	}
+	},
+	paths: { 'vs': 'monaco-editor/dev/vs' }
 })
 
-requirejs(['jquery', 'game', 'assembler'], setup);
+requirejs(['jquery', 'game', 'assembler', 'vs/editor/editor.main'], setup);

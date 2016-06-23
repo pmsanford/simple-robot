@@ -2,17 +2,9 @@
 <html>
 	<body>
 		<div id="gamediv"></div>
-		<div><textarea id="assembly" cols="100" rows="25">	LDR	!127
-	STR	[!1]
-LOP	LDR	[!2]
-	CMP	!4
-	JEQ	TRN
-	JMP LOP
-TRN	LDR	!0
-	STR	[!1]
-	LDR	!127
-	STR	[!0]
-	HLT	0</textarea> <button id="link">Link</button> <div id="tdiv" style="display: inline-block; vertical-align: top; font-family: monospace"></div><div style="vertical-align: bottom; display: inline-block"><button id="asmbtn">Assemble</button> <button id="load">Load</button></div></div>
+		<div height="50%">
+		<div id="asm_code" style="height: 500px; width: 750px"></div>
+		<button id="link">Link</button> <div id="tdiv" style="display: inline-block; vertical-align: top; font-family: monospace"></div><div style="vertical-align: bottom; display: inline-block"><button id="asmbtn">Assemble</button> <button id="load">Load</button></div></div>
 	<script data-main="page" src="require.js"></script>
 	</body>
 </html>
