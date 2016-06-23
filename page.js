@@ -54,6 +54,7 @@ function setup($, Game, Assembler, RoverAsm) {
 		});
 		monaco.languages.register({ id: 'roverAsm' });
 		monaco.languages.setMonarchTokensProvider('roverAsm', RoverAsm);
+		monaco.languages.registerCompletionItemProvider('roverAsm', RoverAsm);
         editor = monaco.editor.create(document.getElementById('asm_code'), {
             language: 'roverAsm',
             scrollBeyondLastLine: false

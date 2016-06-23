@@ -1,4 +1,4 @@
-define({
+define(['vs/editor/editor.main'], {
   mnemonics: ['ADD', 'ADC', 'SUB', 'SUF', 'MUL', 'DIV', 'JMP', 'JLT', 'JGT', 'JEQ', 
               'JNE', 'LDR', 'STR', 'CMP', 'AND', 'ORR', 'NOT', 'XOR', 'CLC', 'STC', 
               'ROR', 'ROL', 'RRC', 'RLC', 'SHR', 'SHL', 'XCH', 'JSG', 'JSL', 'LJP', 
@@ -38,4 +38,9 @@ define({
       [/\]/, { token: '@brackets', bracket: '@close', next: '@popall' }],
     ]
   },
+  provideCompletionItems: function() {
+    return this.mnemonics.map(function(curr) {
+      return { label: curr, kind: monaco.languages.CompletionItemKind.Text };
+    });
+  }
 });
