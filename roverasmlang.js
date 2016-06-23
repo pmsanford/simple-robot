@@ -22,18 +22,20 @@ define({
       [/\t/, 'white'],
       [/[a-zA-Z]+/, { token: 'variable.name', next: '@popall' }],
       [/\[/, { token: '@brackets', bracket: '@open', next: '@targ_brackets' }],
-      [/\]/, { token: '@brackets', bracket: '@close', next: '@popall' }],
       [/0[xX][0-9a-fA-F]+/, { token: 'number.hex', next: '@popall' }],
       [/\d+/, { token: 'number', next: '@popall' }],
       [/!/, 'identifier']
     ],
 
     targ_brackets: [
-      [/\t/, 'white'],
-      [/[a-zA-Z]+/, { token: 'variable.name', next: '@pop' }],
-      [/0[xX][0-9a-fA-F]+/, { token: 'number.hex', next: '@pop' }],
-      [/\d+/, { token: 'number', next: '@pop' }],
+      [/[a-zA-Z]+/, { token: 'variable.name', next: '@t_bracket_end' }],
+      [/0[xX][0-9a-fA-F]+/, { token: 'number.hex', next: '@t_bracket_end' }],
+      [/\d+/, { token: 'number', next: '@t_bracket_end' }],
       [/!/, 'identifier']
+    ],
+
+    t_bracket_end: [
+      [/\]/, { token: '@brackets', bracket: '@close', next: '@popall' }],
     ]
   },
 });
