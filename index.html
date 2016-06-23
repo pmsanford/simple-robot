@@ -13,6 +13,7 @@
 		<script src="roverstatus.js"></script>
 		<script src="rover.js"></script>
 		<script src="game.js"></script>
+		<script src="page.js"></script>
 	</head>
 	<body onload="Game.init($('#gamediv'))">
 		<div id="gamediv"></div>
@@ -27,76 +28,5 @@ TRN	LDR	!0
 	LDR	!127
 	STR	[!0]
 	HLT	0</textarea> <button id="link">Link</button> <div id="tdiv" style="display: inline-block; vertical-align: top; font-family: monospace"></div><div style="vertical-align: bottom; display: inline-block"><button id="asmbtn">Assemble</button> <button id="load">Load</button></div></div>
-		<script type="text/javascript">
-			$(document).delegate('#assembly', 'keydown', function(e) {
-				var keycode = e.keyCode || e.which;
-
-				// From: http://stackoverflow.com/questions/6637341/use-tab-to-indent-in-textarea
-				if (keycode === 9) {
-				    e.preventDefault();
-				    var start = $(this).get(0).selectionStart;
-				    var end = $(this).get(0).selectionEnd;
-
-				    // set textarea value to: text before caret + tab + text after caret
-				    $(this).val($(this).val().substring(0, start)
-				                + "\t"
-				                + $(this).val().substring(end));
-
-				    // put caret at right position again
-				    $(this).get(0).selectionStart =
-				    $(this).get(0).selectionEnd = start + 1;
-				}
-			});
-			$(document).ready(function() {
-				$('#asmbtn').on('click', function() {
-					var asm = new Assembler($('#assembly').val());
-					var cmp = asm.assemble();
-					cmp = new Uint8Array(cmp);
-					window.localStorage.setItem("rover-program", Assembler.serialize(cmp));
-					var html = '';
-					for (var i = 0; i < cmp.length; i += 2) {
-						html = html + '<br />' +
-						fmt_bin(cmp[i]) +
-						'&nbsp;&nbsp;&nbsp;' +
-						fmt_bin(cmp[i+1]);
-					}
-					$('#tdiv').html(html);
-				});
-				$('#load').on('click', function() {
-					var prog = Assembler.deserialize(window.localStorage.getItem("rover-program"));
-					Game.reset_rover(prog);
-				});
-				$('#link').on('click', function() {
-					var prog = $('#assembly').val();
-					prog = encodeURIComponent(prog);
-					var base = window.location.href.split('?')[0];
-					window.history.replaceState(prog, "", base + "?program=" + prog);
-				});
-				var prog = get_param("program");
-				if (prog !== undefined && prog !== null && prog !== "") {
-					prog = decodeURIComponent(prog);
-					$('#assembly').val(prog);
-				}
-			});
-			
-			function fmt_bin(num) {
-			  var rstr = num.toString(2);
-			  rstr = "00000000" + rstr;
-			  rstr = rstr.substr(rstr.length - 8);
-			  rstr = rstr.substr(0, 4) + " " + rstr.substr(4);
-			  return rstr;
-			}
-
-			//from http://stackoverflow.com/questions/901115/how-can-i-get-query-string-values-in-javascript
-			function get_param(name, url) {
-			    if (!url) url = window.location.href;
-			    name = name.replace(/[\[\]]/g, "\\$&");
-			    var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
-			        results = regex.exec(url);
-			    if (!results) return null;
-			    if (!results[2]) return '';
-			    return decodeURIComponent(results[2].replace(/\+/g, " "));
-			}
-		</script>
 	</body>
 </html>
