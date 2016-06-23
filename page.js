@@ -1,3 +1,11 @@
+function get_asm() {
+	return $('#assembly').val();
+}
+
+function set_asm(val) {
+	$('#assembly').val(val);
+}
+
 $(document).delegate('#assembly', 'keydown', function(e) {
 	var keycode = e.keyCode || e.which;
 
@@ -19,7 +27,7 @@ $(document).delegate('#assembly', 'keydown', function(e) {
 });
 $(document).ready(function() {
 	$('#asmbtn').on('click', function() {
-		var asm = new Assembler($('#assembly').val());
+		var asm = new Assembler(get_asm());
 		var cmp = asm.assemble();
 		cmp = new Uint8Array(cmp);
 		window.localStorage.setItem("rover-program", Assembler.serialize(cmp));
@@ -37,7 +45,7 @@ $(document).ready(function() {
 		Game.reset_rover(prog);
 	});
 	$('#link').on('click', function() {
-		var prog = $('#assembly').val();
+		var prog = get_asm();
 		prog = encodeURIComponent(prog);
 		var base = window.location.href.split('?')[0];
 		window.history.replaceState(prog, "", base + "?program=" + prog);
@@ -45,7 +53,7 @@ $(document).ready(function() {
 	var prog = get_param("program");
 	if (prog !== undefined && prog !== null && prog !== "") {
 		prog = decodeURIComponent(prog);
-		$('#assembly').val(prog);
+		set_asm(prog);
 	}
 });
 
