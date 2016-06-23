@@ -26,7 +26,7 @@ function get_param(name, url) {
 }
 var editor = null;
 
-function setup($, Game, Assembler) {
+function setup($, Game, Assembler, RoverAsm) {
 	$(document).ready(function() {
 		$('#asmbtn').on('click', function() {
 			var asm = new Assembler(get_asm());
@@ -52,8 +52,10 @@ function setup($, Game, Assembler) {
 			var base = window.location.href.split('?')[0];
 			window.history.replaceState(prog, "", base + "?program=" + prog);
 		});
+		monaco.languages.register({ id: 'roverAsm' });
+		monaco.languages.setMonarchTokensProvider('roverAsm', RoverAsm);
         editor = monaco.editor.create(document.getElementById('asm_code'), {
-            language: 'javascript',
+            language: 'roverAsm',
             scrollBeyondLastLine: false
         });
         editor.getModel().updateOptions({ insertSpaces: false });
@@ -79,4 +81,4 @@ requirejs.config({
 	paths: { 'vs': 'monaco-editor/dev/vs' }
 })
 
-requirejs(['jquery', 'game', 'assembler', 'vs/editor/editor.main'], setup);
+requirejs(['jquery', 'game', 'assembler', 'roverasmlang', 'vs/editor/editor.main'], setup);
