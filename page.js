@@ -53,8 +53,10 @@ function setup($, Game, Assembler) {
 			window.history.replaceState(prog, "", base + "?program=" + prog);
 		});
         editor = monaco.editor.create(document.getElementById('asm_code'), {
-            language: 'javascript'
+            language: 'javascript',
+            scrollBeyondLastLine: false
         });
+        editor.getModel().updateOptions({ insertSpaces: false });
 		var prog = get_param("program");
 		if (prog !== undefined && prog !== null && prog !== "") {
 			prog = decodeURIComponent(prog);
