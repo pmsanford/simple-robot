@@ -81,42 +81,8 @@ function setup($, Game, Assembler) {
 
 requirejs.config({
 	shim: {
-		'game': {
-			deps: ['rot.min', 'debuglogger', 'map', 'rover', 'roverstatus', 'controller', 'rendercontroller'],
-			exports: 'Game'
-		},
-		'assembler': {
-			exports: 'Assembler'
-		},
-		'controller': {
-			deps: ['rot.min'],
-			exports: 'Controller'
-		},
-		'debuglogger': {
-			exports: 'Debuglogger'
-		},
-		'map': {
-			deps: ['xy'],
-			exports: 'GameMap'
-		},
-		'rendercontroller': {
-			exports: 'RenderController'
-		},
-		'instruction': {
-			exports: 'Instruction'
-		},
-		'rot.min': {
+		'rot': {
 			exports: 'ROT'
-		},
-		'rover': {
-			deps: ['instruction'],
-			exports: 'Rover'
-		},
-		'roverstatus': {
-			exports: 'RoverStatus'
-		},
-		'xy': {
-			exports: 'XY'
 		}
 	}
 })
