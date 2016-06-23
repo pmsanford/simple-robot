@@ -25,7 +25,7 @@ function get_param(name, url) {
     return decodeURIComponent(results[2].replace(/\+/g, " "));
 }
 
-function setup(scripts) {
+function setup($, Game, Assembler) {
 	$(document).delegate('#assembly', 'keydown', function(e) {
 		var keycode = e.keyCode || e.which;
 
@@ -79,5 +79,46 @@ function setup(scripts) {
 	});
 }
 
-requirejs(["jquery", "rot.min", "debuglogger", "xy", "map", "controller", "assembler", "rendercontroller", "instruction", 
-			"roverstatus", "rover", "game"], setup);
+requirejs.config({
+	shim: {
+		'game': {
+			deps: ['rot.min', 'debuglogger', 'map', 'rover', 'roverstatus', 'controller', 'rendercontroller'],
+			exports: 'Game'
+		},
+		'assembler': {
+			exports: 'Assembler'
+		},
+		'controller': {
+			deps: ['rot.min'],
+			exports: 'Controller'
+		},
+		'debuglogger': {
+			exports: 'Debuglogger'
+		},
+		'map': {
+			deps: ['xy'],
+			exports: 'GameMap'
+		},
+		'rendercontroller': {
+			exports: 'RenderController'
+		},
+		'instruction': {
+			exports: 'Instruction'
+		},
+		'rot.min': {
+			exports: 'ROT'
+		},
+		'rover': {
+			deps: ['instruction'],
+			exports: 'Rover'
+		},
+		'roverstatus': {
+			exports: 'RoverStatus'
+		},
+		'xy': {
+			exports: 'XY'
+		}
+	}
+})
+
+requirejs(['jquery', 'game', 'assembler'], setup);
