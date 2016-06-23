@@ -1,21 +1,6 @@
 <!doctype html>
 <html>
-	<head>
-		<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.3/jquery.min.js"></script>
-		<script src="rot.min.js"></script>
-		<script src="debuglogger.js"></script>
-		<script src="xy.js"></script>
-		<script src="map.js"></script>
-		<script src="controller.js"></script>
-		<script src="assembler.js"></script>
-		<script src="rendercontroller.js"></script>
-		<script src="instruction.js"></script>
-		<script src="roverstatus.js"></script>
-		<script src="rover.js"></script>
-		<script src="game.js"></script>
-		<script src="page.js"></script>
-	</head>
-	<body onload="Game.init($('#gamediv'))">
+	<body>
 		<div id="gamediv"></div>
 		<div><textarea id="assembly" cols="100" rows="25">	LDR	!127
 	STR	[!1]
@@ -28,5 +13,6 @@ TRN	LDR	!0
 	LDR	!127
 	STR	[!0]
 	HLT	0</textarea> <button id="link">Link</button> <div id="tdiv" style="display: inline-block; vertical-align: top; font-family: monospace"></div><div style="vertical-align: bottom; display: inline-block"><button id="asmbtn">Assemble</button> <button id="load">Load</button></div></div>
+	<script data-main="page" src="require.js"></script>
 	</body>
 </html>

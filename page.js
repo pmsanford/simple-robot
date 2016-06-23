@@ -6,57 +6,6 @@ function set_asm(val) {
 	$('#assembly').val(val);
 }
 
-$(document).delegate('#assembly', 'keydown', function(e) {
-	var keycode = e.keyCode || e.which;
-
-	// From: http://stackoverflow.com/questions/6637341/use-tab-to-indent-in-textarea
-	if (keycode === 9) {
-	    e.preventDefault();
-	    var start = $(this).get(0).selectionStart;
-	    var end = $(this).get(0).selectionEnd;
-
-	    // set textarea value to: text before caret + tab + text after caret
-	    $(this).val($(this).val().substring(0, start)
-	                + "\t"
-	                + $(this).val().substring(end));
-
-	    // put caret at right position again
-	    $(this).get(0).selectionStart =
-	    $(this).get(0).selectionEnd = start + 1;
-	}
-});
-$(document).ready(function() {
-	$('#asmbtn').on('click', function() {
-		var asm = new Assembler(get_asm());
-		var cmp = asm.assemble();
-		cmp = new Uint8Array(cmp);
-		window.localStorage.setItem("rover-program", Assembler.serialize(cmp));
-		var html = '';
-		for (var i = 0; i < cmp.length; i += 2) {
-			html = html + '<br />' +
-			fmt_bin(cmp[i]) +
-			'&nbsp;&nbsp;&nbsp;' +
-			fmt_bin(cmp[i+1]);
-		}
-		$('#tdiv').html(html);
-	});
-	$('#load').on('click', function() {
-		var prog = Assembler.deserialize(window.localStorage.getItem("rover-program"));
-		Game.reset_rover(prog);
-	});
-	$('#link').on('click', function() {
-		var prog = get_asm();
-		prog = encodeURIComponent(prog);
-		var base = window.location.href.split('?')[0];
-		window.history.replaceState(prog, "", base + "?program=" + prog);
-	});
-	var prog = get_param("program");
-	if (prog !== undefined && prog !== null && prog !== "") {
-		prog = decodeURIComponent(prog);
-		set_asm(prog);
-	}
-});
-
 function fmt_bin(num) {
   var rstr = num.toString(2);
   rstr = "00000000" + rstr;
@@ -75,3 +24,60 @@ function get_param(name, url) {
     if (!results[2]) return '';
     return decodeURIComponent(results[2].replace(/\+/g, " "));
 }
+
+function setup(scripts) {
+	$(document).delegate('#assembly', 'keydown', function(e) {
+		var keycode = e.keyCode || e.which;
+
+		// From: http://stackoverflow.com/questions/6637341/use-tab-to-indent-in-textarea
+		if (keycode === 9) {
+		    e.preventDefault();
+		    var start = $(this).get(0).selectionStart;
+		    var end = $(this).get(0).selectionEnd;
+
+		    // set textarea value to: text before caret + tab + text after caret
+		    $(this).val($(this).val().substring(0, start)
+		                + "\t"
+		                + $(this).val().substring(end));
+
+		    // put caret at right position again
+		    $(this).get(0).selectionStart =
+		    $(this).get(0).selectionEnd = start + 1;
+		}
+	});
+	$(document).ready(function() {
+		$('#asmbtn').on('click', function() {
+			var asm = new Assembler(get_asm());
+			var cmp = asm.assemble();
+			cmp = new Uint8Array(cmp);
+			window.localStorage.setItem("rover-program", Assembler.serialize(cmp));
+			var html = '';
+			for (var i = 0; i < cmp.length; i += 2) {
+				html = html + '<br />' +
+				fmt_bin(cmp[i]) +
+				'&nbsp;&nbsp;&nbsp;' +
+				fmt_bin(cmp[i+1]);
+			}
+			$('#tdiv').html(html);
+		});
+		$('#load').on('click', function() {
+			var prog = Assembler.deserialize(window.localStorage.getItem("rover-program"));
+			Game.reset_rover(prog);
+		});
+		$('#link').on('click', function() {
+			var prog = get_asm();
+			prog = encodeURIComponent(prog);
+			var base = window.location.href.split('?')[0];
+			window.history.replaceState(prog, "", base + "?program=" + prog);
+		});
+		var prog = get_param("program");
+		if (prog !== undefined && prog !== null && prog !== "") {
+			prog = decodeURIComponent(prog);
+			set_asm(prog);
+		}
+		Game.init($('#gamediv'));
+	});
+}
+
+requirejs(["jquery", "rot.min", "debuglogger", "xy", "map", "controller", "assembler", "rendercontroller", "instruction", 
+			"roverstatus", "rover", "game"], setup);
