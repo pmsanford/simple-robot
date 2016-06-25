@@ -1,0 +1,69 @@
+{
+  "name": "monaco-editor",
+  "private": false,
+  "version": "0.4.0",
+  "description": "A browser based code editor",
+  "author": {
+    "name": "Microsoft Corporation"
+  },
+  "license": "MIT",
+  "scripts": {
+    "simpleserver": "http-server -c-1 ../",
+    "release": "gulp release",
+    "website": "gulp website"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Microsoft/monaco-editor.git"
+  },
+  "devDependencies": {
+    "event-stream": "^3.3.2",
+    "gulp": "^3.9.1",
+    "http-server": "^0.9.0",
+    "monaco-editor-core": "0.4.2",
+    "monaco-languages": "0.2.0",
+    "monaco-typescript": "0.2.1",
+    "rimraf": "^2.5.2"
+  },
+  "bugs": {
+    "url": "https://github.com/Microsoft/monaco-editor/issues"
+  },
+  "homepage": "https://github.com/Microsoft/monaco-editor#readme",
+  "_id": "monaco-editor@0.4.0",
+  "_shasum": "e2727234505b84c3b297de26012ee873bf989b7a",
+  "_from": "monaco-editor@latest",
+  "_npmVersion": "3.8.6",
+  "_nodeVersion": "5.11.0",
+  "_npmUser": {
+    "name": "alexandrudima",
+    "email": "alexdima@microsoft.com"
+  },
+  "dist": {
+    "shasum": "e2727234505b84c3b297de26012ee873bf989b7a",
+    "tarball": "https://registry.npmjs.org/monaco-editor/-/monaco-editor-0.4.0.tgz"
+  },
+  "maintainers": [
+    {
+      "name": "alexandrudima",
+      "email": "alexdima@microsoft.com"
+    },
+    {
+      "name": "egamma",
+      "email": "egamma@microsoft.com"
+    },
+    {
+      "name": "jrieken",
+      "email": "jrieken@microsoft.com"
+    },
+    {
+      "name": "microsoft",
+      "email": "npmjs@microsoft.com"
+    }
+  ],
+  "_npmOperationalInternal": {
+    "host": "packages-12-west.internal.npmjs.com",
+    "tmp": "tmp/monaco-editor-0.4.0.tgz_1466145714761_0.5259190476499498"
+  },
+  "directories": {},
+  "_resolved": "https://registry.npmjs.org/monaco-editor/-/monaco-editor-0.4.0.tgz"
+}

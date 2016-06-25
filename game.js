@@ -1,87 +1,93 @@
-var GameController = function() {
-	this.display = new ROT.Display();
-	this.logger = new DebugLogger(true);
-	var opts = this.display.getOptions();
-	this.map = new GameMap(opts.width - 50, opts.height);
-	this.rover = new Rover(10, 10, this.logger, this);
-	this.status = new RoverStatus(opts.width - 50, 0, this.rover);
-	this.engine = null;
-	this.scheduler = null;
-	this.controller = null;
-	this.rc = null;
-	this.game_group = new RenderGroup();
-	this.garage_group = new RenderGroup();
-	this.current_groups = [this.game_group];
-};
+define(['rot', 'debuglogger', 'map', 'rover', 'roverstatus', 'rovercontroller', 
+		'rendercontroller', 'rendergroup', 'garage', 'garagecontroller', 
+		'basiccomponents', 'extensions'], 
+	function (ROT, DebugLogger, GameMap, Rover, RoverStatus, RoverController, RenderController,
+				RenderGroup, Garage, GarageController, BasicComponents) {
+		var GameController = function() {
+			this.display = new ROT.Display();
+			this.logger = new DebugLogger(true);
+			var opts = this.display.getOptions();
+			this.map = new GameMap(opts.width - 50, opts.height);
+			this.rover = new Rover(10, 10, this.logger, this);
+			this.status = new RoverStatus(opts.width - 50, 0, this.rover);
+			this.engine = null;
+			this.scheduler = null;
+			this.controller = null;
+			this.rc = null;
+			this.game_group = new RenderGroup();
+			this.garage_group = new RenderGroup();
+			this.current_groups = [this.game_group];
+		};
 
-GameController.prototype.reset_rover = function(program) {
-	this.scheduler.remove(this.rover);
-	this.game_group.remove(this.rover);
-	this.rover = new Rover(10, 10, this.logger, this);
-	this.scheduler.add(this.rover, true);
-	var opts = this.display.getOptions();
-	this.status = new RoverStatus(opts.width - 50, 0, this.rover);
-	this.rover.load(program);
-	this.game_group.add(this.rover);
-	this.render();
-};
+		GameController.prototype.reset_rover = function(program) {
+			this.scheduler.remove(this.rover);
+			this.game_group.remove(this.rover);
+			this.rover = new Rover(10, 10, this.logger, this);
+			this.scheduler.add(this.rover, true);
+			var opts = this.display.getOptions();
+			this.status = new RoverStatus(opts.width - 50, 0, this.rover);
+			this.rover.load(program);
+			this.game_group.add(this.rover);
+			this.render();
+		};
 
-GameController.prototype.init = function(targetDiv) {
-	targetDiv.append(this.display.getContainer());
-	var prog = new Uint8Array([
-		0b01011100, 0b01111111,
-		0b01100110, 0x01,
-		0b01011110, 0x02,
-		0b01101100, 0x04,
-		0b01001000, 0x02,
-		0b00110000, 0b11111000,
-		0b01011100, 0x0,
-		0b01100110, 0x01,
-		0b01011100, 0b01111111,
-		0b01100110, 0x00,
-		0b11110000, 0x0
-	]);
-	this.rover.load(prog);
-	this.scheduler = new ROT.Scheduler.Simple();
-	this.engine = new ROT.Engine(this.scheduler);
-	this.controller = new RoverController(this);
-	this.rc = new RenderController(this);
-	this.scheduler.add(this.controller, true);
-	this.scheduler.add(this.rover, true);
-	this.scheduler.add(this.rc, true);
-	this.engine.start();
-	this.game_group.add(this.map);
-	this.game_group.add(this.rover);
-	this.game_group.add(this.status);
-	this.garage = new Garage(this.rover, this.display, [new PositionSensors.X(this.rover), new PositionSensors.Y(this.rover), new HeadingSensor(this.rover)]);
-	this.garage_group.add(this.garage);
-	this.garage_controller = new GarageController(this.garage,
-													this.hide_garage.bind(this),
-													this.render.bind(this));
-	this.render();
-};
+		GameController.prototype.init = function(targetDiv) {
+			targetDiv.append(this.display.getContainer());
+			var prog = new Uint8Array([
+				0b01011100, 0b01111111,
+				0b01100110, 0x01,
+				0b01011110, 0x02,
+				0b01101100, 0x04,
+				0b01001000, 0x02,
+				0b00110000, 0b11111000,
+				0b01011100, 0x0,
+				0b01100110, 0x01,
+				0b01011100, 0b01111111,
+				0b01100110, 0x00,
+				0b11110000, 0x0
+			]);
+			this.rover.load(prog);
+			this.scheduler = new ROT.Scheduler.Simple();
+			this.engine = new ROT.Engine(this.scheduler);
+			this.controller = new RoverController(this);
+			this.rc = new RenderController(this);
+			this.scheduler.add(this.controller, true);
+			this.scheduler.add(this.rover, true);
+			this.scheduler.add(this.rc, true);
+			this.engine.start();
+			this.game_group.add(this.map);
+			this.game_group.add(this.rover);
+			this.game_group.add(this.status);
+			this.garage = new Garage(this.rover, this.display, [new BasicComponents.PositionSensors.X(this.rover), new BasicComponents.PositionSensors.Y(this.rover), new BasicComponents.HeadingSensor(this.rover)]);
+			this.garage_group.add(this.garage);
+			this.garage_controller = new GarageController(this.garage,
+															this.hide_garage.bind(this),
+															this.render.bind(this));
+			this.render();
+		};
 
-GameController.prototype.show_garage = function() {
-	this.current_groups = [this.garage_group];
-	this.garage_controller.hook();
-	this.render();
-};
+		GameController.prototype.show_garage = function() {
+			this.current_groups = [this.garage_group];
+			this.garage_controller.hook();
+			this.render();
+		};
 
-GameController.prototype.hide_garage = function() {
-	this.current_groups = [this.game_group];
-	this.controller.hook();
-	this.render();
-};
+		GameController.prototype.hide_garage = function() {
+			this.current_groups = [this.game_group];
+			this.controller.hook();
+			this.render();
+		};
 
-GameController.prototype.can_move = function(x, y) {
-	return !this.map.check_collision(x, y);
-};
+				GameController.prototype.can_move = function(x, y) {
+					return !this.map.check_collision(x, y);
+				};
 
-GameController.prototype.render = function() {
-	this.display.clear();
-	for (var i = 0; i < this.current_groups.length; i++) {
-		this.current_groups[i].draw(this.display);
-	}
-};
+		GameController.prototype.render = function() {
+			this.display.clear();
+			for (var i = 0; i < this.current_groups.length; i++) {
+				this.current_groups[i].draw(this.display);
+			}
+		};
 
-Game = new GameController();
+		return new GameController();
+});
